@@ -1,12 +1,12 @@
-import { animation } from './animation';
-import { border } from './border';
-import { breakpoint } from './breakpoint';
-import { color } from './color';
-import { focus } from './focus';
-import { layout } from './layout';
-import { shadow } from './shadow';
-import { size } from './size';
-import { spacing } from './spacing';
-import { typo } from './typo';
+import { animation } from './animation.js';
+import { border } from './border.js';
+import { breakpoint } from './breakpoint.js';
+import { color } from './color.js';
+import { focus } from './focus.js';
+import { layout } from './layout.js';
+import { shadow } from './shadow.js';
+import { size } from './size.js';
+import { spacing } from './spacing.js';
+import { typo } from './typo.js';
 
-export { animation, border, breakpoint, color, focus, layout, shadow, size, spacing, typo };
+export default { animation, border, breakpoint, color, focus, layout, shadow, size, spacing, typo };

@@ -1,13 +1,15 @@
-import type { DesignToken, DesignTokens } from 'style-dictionary';
+import type { DesignToken, DesignTokens } from 'style-dictionary/types';
 
-const attributes = (group?: string): Partial<DesignToken> => ({
-  attributes: {
-    category: 'size',
-    group,
-  },
-});
+const attributes = (group?: string) =>
+  ({
+    type: 'dimension',
+    attributes: {
+      category: 'size',
+      group,
+    },
+  }) satisfies Partial<DesignToken>;
 
-export const size: DesignTokens = {
+export const size = {
   element: {
     xxxs: {
       zero: {
@@ -206,4 +208,4 @@ export const size: DesignTokens = {
       },
     },
   },
-};
+} satisfies DesignTokens;

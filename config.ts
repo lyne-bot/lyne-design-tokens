@@ -1,6 +1,9 @@
-import type { Config } from 'style-dictionary';
+import type { Config } from 'style-dictionary/types';
+
+import tokens from './designTokens/index.js';
 
 export const config: Config = {
+  tokens,
   platforms: {
     css: {
       buildPath: 'dist/css/',
@@ -15,15 +18,7 @@ export const config: Config = {
         },
       ],
       transformGroup: 'css',
-      transforms: [
-        'attribute/cti',
-        'name/cti/kebab',
-        'time/seconds',
-        'content/icon',
-        'color/css',
-        'size/pxToRem',
-        'size/rem',
-      ],
+      transforms: ['attribute/cti', 'name/kebab', 'html/icon', 'size/pxToRem', 'size/rem'],
     },
     js: {
       buildPath: 'dist/js/',
@@ -47,7 +42,7 @@ export const config: Config = {
         },
       ],
       transformGroup: 'js',
-      transforms: ['attribute/cti', 'name/cti/pascal', 'color/css'],
+      transforms: ['attribute/cti', 'name/pascal'],
     },
     jsonFlat: {
       buildPath: 'dist/js/',
@@ -59,7 +54,7 @@ export const config: Config = {
         },
       ],
       transformGroup: 'js',
-      transforms: ['attribute/cti', 'name/cti/kebab', 'color/css'],
+      transforms: ['attribute/cti', 'name/kebab'],
     },
     jsonRaw: {
       buildPath: 'dist/js/',
@@ -71,7 +66,7 @@ export const config: Config = {
         },
       ],
       transformGroup: 'js',
-      transforms: ['attribute/cti', 'name/cti/kebab', 'color/css'],
+      transforms: ['attribute/cti', 'name/kebab'],
     },
     scss: {
       buildPath: 'dist/scss/',
@@ -92,14 +87,12 @@ export const config: Config = {
       transformGroup: 'scss',
       transforms: [
         'attribute/cti',
-        'name/cti/kebab',
+        'name/kebab',
         'time/seconds',
-        'content/icon',
-        'color/css',
+        'html/icon',
         'size/pxToRem',
         'size/rem',
       ],
     },
   },
-  source: ['designTokens'],
 };

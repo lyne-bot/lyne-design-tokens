@@ -1,17 +1,19 @@
-import type { DesignToken, DesignTokens } from 'style-dictionary';
+import type { DesignToken, DesignTokens } from 'style-dictionary/types';
 
-const attributes = (group: string): Partial<DesignToken> => ({
-  attributes: {
-    category: 'size',
-    group,
-  },
-});
+const attributes = (group: string) =>
+  ({
+    type: 'dimension',
+    attributes: {
+      category: 'size',
+      group,
+    },
+  }) satisfies Partial<DesignToken>;
 
-export const focus: DesignTokens = {
+export const focus = {
   outline: {
     offset: {
       value: 3,
       ...attributes('focus'),
     },
   },
-};
+} satisfies DesignTokens;

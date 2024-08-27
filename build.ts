@@ -1,56 +1,53 @@
-import { FormatterArguments } from 'style-dictionary/types/Format';
-import { config } from './config';
-import StyleDictionaryBase, { TransformedToken } from 'style-dictionary';
+import { config } from './config.js';
+import StyleDictionary from 'style-dictionary';
 import * as fs from 'fs';
+import type { FormatFnArguments, TransformedToken } from 'style-dictionary/types';
+import { fileHeader, getReferences, usesReferences } from 'style-dictionary/utils';
 
-const StyleDictionary = StyleDictionaryBase.extend(config);
-const fileHeader = StyleDictionary.formatHelpers.fileHeader;
-
+const styleDictionary = new StyleDictionary(config);
 console.log('Build started...');
 console.log('\n==============================================');
 
-StyleDictionary.registerFormat({
-  formatter: ({ file, dictionary, options }: FormatterArguments) => {
-    const symbols = dictionary.allProperties.map(cssTemplate).join('') + '\n';
+styleDictionary.registerFormat({
+  format: async ({ file, dictionary, options }: FormatFnArguments) => {
+    const symbols = dictionary.allTokens.map(cssTemplate).join('') + '\n';
 
     const composedVars = fs
       .readFileSync('./composed-variables/composed-variables.css', 'utf-8')
       .match(/\/\* EXTRACTING_CSS_VARS_START \*\/([\S\s]*)\/\* EXTRACTING_CSS_VARS_END \*\//m)![1];
 
     return (
-      fileHeader({ file }) +
+      (await fileHeader({ file })) +
       `${options.selector ?? ':root'} {\n${symbols}\n  /* Composed variables */\n\n  ${composedVars.trim()}\n}\n`
     );
   },
   name: 'css/variables',
 });
 
-StyleDictionary.registerFormat({
-  formatter: (args: FormatterArguments) =>
-    args.dictionary.allProperties.map(scssTemplate).join('') + '\n',
+styleDictionary.registerFormat({
+  format: async (args: FormatFnArguments) =>
+    args.dictionary.allTokens.map(scssTemplate).join('') + '\n',
   name: 'custom/format/scss',
 });
 
-StyleDictionary.registerFormat({
-  formatter: (args: FormatterArguments) => {
-    const symbols = args.dictionary.allProperties.map(commonjsTemplate).join('');
+styleDictionary.registerFormat({
+  format: async (args: FormatFnArguments) => {
+    const symbols = args.dictionary.allTokens.map(commonjsTemplate).join('');
     return `module.exports = {\n${symbols}};\n`;
   },
   name: 'custom/format/javascript/module',
 });
 
-StyleDictionary.registerFormat({
-  formatter: ({ dictionary }) => {
+styleDictionary.registerFormat({
+  format: async ({ dictionary }: FormatFnArguments) => {
     const { allTokens } = dictionary;
 
     allTokens.forEach((token) => {
-      // if a token uses a reference token, we add the original token object
-      const usesReference = dictionary.usesReference(token);
+      // If a token uses a reference token, we add the original token object
+      const usesReference = usesReferences(token);
 
       if (usesReference) {
-        const ref = dictionary.getReferences(token.original.value);
-
-        token.refOriginal = ref;
+        token.refOriginal = getReferences(token.original.value, dictionary.tokens);
       }
     });
 
@@ -64,7 +61,7 @@ StyleDictionary.registerFormat({
 });
 
 // FINALLY, BUILD ALL THE PLATFORMS
-StyleDictionary.buildAllPlatforms();
+await styleDictionary.buildAllPlatforms();
 
 console.log('\n==============================================');
 console.log('\nBuild completed!');
@@ -83,7 +80,7 @@ function cssTemplate(token: TransformedToken) {
     if (token.comment) {
       output += `   * ${token.comment}\n`;
     }
-    if (token.attributes?.category === 'size') {
+    if (token.type === 'dimension') {
       output += `   * Original Value: ${token.original.value}px\n`;
     }
     output += '   */\n';
@@ -106,7 +103,7 @@ function scssTemplate(token: TransformedToken) {
   if (token.comment) {
     output += `/// ${token.comment}\n`;
   }
-  if (token.attributes?.category === 'size') {
+  if (token.type === 'dimension') {
     output += `/// Original Value: ${token.original.value}px\n`;
   }
   output += `$${token.name}: ${token.value};\n`;

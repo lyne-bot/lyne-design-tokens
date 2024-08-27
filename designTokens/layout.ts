@@ -1,13 +1,15 @@
-import type { DesignToken, DesignTokens } from 'style-dictionary';
+import type { DesignToken, DesignTokens } from 'style-dictionary/types';
 
-const attributes = (group: string, category = 'size'): Partial<DesignToken> => ({
-  attributes: {
-    category,
-    group,
-  },
-});
+const attributes = (group: string, category = 'size') =>
+  ({
+    type: category === 'size' ? 'dimension' : undefined,
+    attributes: {
+      category,
+      group,
+    },
+  }) satisfies Partial<DesignToken>;
 
-export const layout: DesignTokens = {
+export const layout = {
   base: {
     grid: {
       columns: {
@@ -112,4 +114,4 @@ export const layout: DesignTokens = {
       },
     },
   },
-};
+} satisfies DesignTokens;

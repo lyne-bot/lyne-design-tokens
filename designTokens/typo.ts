@@ -1,15 +1,16 @@
-import type { DesignToken, DesignTokens } from 'style-dictionary';
+import type { DesignToken, DesignTokens } from 'style-dictionary/types';
 
 const baseTypoSpacing = 16;
 const typoSpacing = (value: number): number => value * baseTypoSpacing;
 
-const attributes = (): Partial<DesignToken> => ({
+const attributes = {
+  type: 'dimension',
   attributes: {
     category: 'size',
   },
-});
+} satisfies Partial<DesignToken>;
 
-export const typo: DesignTokens = {
+export const typo = {
   fontFamily: {
     value: '"SBB", "Helvetica Neue", Helvetica, Arial, sans-serif',
   },
@@ -32,51 +33,51 @@ export const typo: DesignTokens = {
   scale: {
     '0-75x': {
       value: typoSpacing(0.75),
-      ...attributes(),
+      ...attributes,
     },
     '0-8125x': {
       value: typoSpacing(0.8125),
-      ...attributes(),
+      ...attributes,
     },
     '0-875x': {
       value: typoSpacing(0.875),
-      ...attributes(),
+      ...attributes,
     },
     default: {
       value: typoSpacing(1),
-      ...attributes(),
+      ...attributes,
     },
     '1-125x': {
       value: typoSpacing(1.125),
-      ...attributes(),
+      ...attributes,
     },
     '1-25x': {
       value: typoSpacing(1.25),
-      ...attributes(),
+      ...attributes,
     },
     '1-5x': {
       value: typoSpacing(1.5),
-      ...attributes(),
+      ...attributes,
     },
     '2x': {
       value: typoSpacing(2),
-      ...attributes(),
+      ...attributes,
     },
     '2-5x': {
       value: typoSpacing(2.5),
-      ...attributes(),
+      ...attributes,
     },
     '3x': {
       value: typoSpacing(3),
-      ...attributes(),
+      ...attributes,
     },
     '3-5x': {
       value: typoSpacing(3.5),
-      ...attributes(),
+      ...attributes,
     },
     '4x': {
       value: typoSpacing(4),
-      ...attributes(),
+      ...attributes,
     },
   },
-};
+} satisfies DesignTokens;
